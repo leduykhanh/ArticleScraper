@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ActicleScraper</string>
+
+    <string name="title_section1">Home</string>
+    <string name="title_section2">View</string>
+    <string name="title_section3">Settings</string>
+    <string name="facebook_app_id">193411710833537</string>
+    <string name="hello_world">Hello world!</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
