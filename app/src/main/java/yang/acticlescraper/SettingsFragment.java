@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -79,6 +82,24 @@ public class SettingsFragment extends Fragment {
         cursor.close();
         db.close();
         sharedLinklist.setAdapter(adapter);
+        sharedLinklist.setOnItemClickListener(new OnItemClickListener() {
+
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+
+                Intent intent = new Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(item)
+                );
+//based on item add info to intent
+                startActivity(intent);
+
+            }
+
+
+        });
         Profile profile = Profile.getCurrentProfile();
         if(profile!=null) {
             profilePictureView.setProfileId(profile.getId());
