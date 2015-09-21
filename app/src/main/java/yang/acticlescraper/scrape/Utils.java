@@ -1,5 +1,7 @@
 package yang.acticlescraper.scrape;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -109,6 +111,7 @@ public class Utils {
         String title="";
         String content = "";
         String time = "";
+        String imageLink = "";
         for (Element h1 : h1s) {
             String linkHref = h1.attr("href");
             String linkClass = h1.attr("class");
@@ -116,6 +119,7 @@ public class Utils {
             if(linkClass.equalsIgnoreCase("story-body__h1"))
                 title = new String(linkText);
         }
+        if(title.length() < 3) return (title);
         Elements divs = doc.getElementsByTag("div");
         for (Element td : divs) {
             String linkHref = td.attr("href");
@@ -126,10 +130,22 @@ public class Utils {
             if(linkClass.equalsIgnoreCase("date date--v2"))
                 time = new String(linkText);
         }
+        Elements imgs = doc.getElementsByTag("img");
+        for (Element td : imgs) {
+            String linkSrc = td.attr("src");
+            String linkClass = td.attr("class");
+            String linkText = td.text();
+            if(linkClass.equalsIgnoreCase("js-image-replace"))
+            {
+                imageLink = new String(linkSrc);
+                Log.e("aaa", linkSrc);
+                break;
+            }
+        }
         Articles.Data temp = new Articles.Data(title, "BBC Com",
                 content,
                 time, "Singapore",
-                SURL);
+                SURL,imageLink);
         if(ViewApp.adapter!=null)
             if(ViewApp.adapter.size()>count)
                 ViewApp.adapter.set(count,temp);

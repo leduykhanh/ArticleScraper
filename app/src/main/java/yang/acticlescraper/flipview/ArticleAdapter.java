@@ -3,14 +3,29 @@ package yang.acticlescraper.flipview;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,17 +116,23 @@ public class ArticleAdapter extends BaseAdapter {
                           facebookManager.share(data.link, data.title);
                           SQLiteDatabase db = mDBHelper.getWritableDatabase();
                           ContentValues values = new ContentValues();
-                          values.put("link",data.link);
-                          values.put("title",data.title);
+                          values.put("link", data.link);
+                          values.put("title", data.title);
                           long newRowId;
-                          newRowId = db.insert("Articles",null,values);
-                          if(newRowId > -1) {
+                          newRowId = db.insert("Articles", null, values);
+                          if (newRowId > -1) {
                               Toast toast = Toast.makeText(context, "Shared link saved", Toast.LENGTH_SHORT);
                               toast.show();
                           }
                           db.close();
                       }
                   });
+          WebView img = (WebView) UI
+                  .<WebView>findViewById(layout,R.id.article_image);
+          img.setWebViewClient(new WebViewClient());
+          img.setInitialScale(95);
+          img.loadUrl(data.imgLink);
+
       }
     return layout;
     }

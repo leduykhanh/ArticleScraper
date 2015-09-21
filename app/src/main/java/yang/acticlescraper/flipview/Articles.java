@@ -14,15 +14,17 @@ public class Articles {
     public final String time;
     public final String city;
     public final String link;
+    public final String imgLink;
 
     public Data(String title, String author, String content, String time,
-                 String city, String link) {
+                 String city, String link,String imgLink) {
       this.title = title;
       this.author = author;
       this.content = content;
       this.time = time;
       this.city = city;
       this.link = link;
+      this.imgLink = imgLink;
     }
   }
 }
