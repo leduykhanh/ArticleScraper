@@ -14,7 +14,6 @@ public class FacebookManager{
     static ShareDialog shareDialog;
     public FacebookManager(Context c){
         context = c;
-        //FacebookSdk.sdkInitialize(c);
         shareDialog = new ShareDialog((Activity)c);
 
     }

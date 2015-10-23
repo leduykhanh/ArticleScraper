@@ -77,7 +77,6 @@ public class ArticleAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
     View layout = convertView;
-      //Log.e("statusaeee", ViewApp.status + "");
       if(ViewApp.status==ViewApp.STATUS.LOADING){
            layout = inflater.inflate(R.layout.loading, null);
              }
@@ -93,10 +92,6 @@ public class ArticleAdapter extends BaseAdapter {
                   .<TextView>findViewById(layout, R.id.title)
                   .setText(Logger.format("%d. %s", position, data.title));
 
-       /* UI
-            .<ImageView>findViewById(layout, R.id.photo)
-            .setImageBitmap(IO.readBitmap(inflater.getContext().getAssets(), data.imageFilename));
-    */
 
           UI
                   .<TextView>findViewById(layout, R.id.content)

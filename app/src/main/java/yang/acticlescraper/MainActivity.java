@@ -2,6 +2,7 @@ package yang.acticlescraper;
 
 import java.util.Locale;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,26 +21,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 
+import bolts.Bolts;
 import yang.acticlescraper.async.Preload;
 import yang.acticlescraper.flipview.ViewApp;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity  {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+
     public SectionsPagerAdapter mSectionsPagerAdapter;
-    private static final int FRAGMENT_COUNT = 3;
+    public static Boolean OFF_GUIDE=false;
+    public static final String API_KEY = "AIzaSyCe6tORd9Ch4lx-9Ku5SQ476uS9OtZYsWA";
+    private ProgressBar mProgress;
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -50,12 +52,15 @@ public class MainActivity extends ActionBarActivity {
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         super.onCreate(savedInstanceState);
+
+        //Check if it's connected to wifi
         if (mWifi.isConnected()) {
             new Preload(this).execute("business");
 
             FacebookSdk.sdkInitialize(this);
 
             setContentView(R.layout.activity_main);
+
             // Create the adapter that will return a fragment for each of the three
             // primary sections of the activity.
             mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -63,12 +68,14 @@ public class MainActivity extends ActionBarActivity {
             // Set up the ViewPager with the sections adapter.
             mViewPager = (ViewPager) findViewById(R.id.pager);
             mViewPager.setAdapter(mSectionsPagerAdapter);
-//            getSupportActionBar().hide();
+
+            if(!OFF_GUIDE){showAboutDialog();}
+
+
         }
         else{
             setContentView(R.layout.offline);
         }
-        //showFragment(1);
 
           }
 
@@ -97,13 +104,21 @@ public class MainActivity extends ActionBarActivity {
     public void refresh(){
         ViewApp.adapter.notifyDataSetChanged();
         FragmentTransaction fragTransaction =   this.getSupportFragmentManager().beginTransaction();
+        //to show the flip content
         fragTransaction.detach(this.mSectionsPagerAdapter.getItem(1));
-        //fragTransaction.attach(this.mSectionsPagerAdapter.getItem(1));
         fragTransaction.attach(new ViewApp());
          mViewPager.setCurrentItem(1);
         fragTransaction.addToBackStack(null);
-        fragTransaction.commit();
+        //not safe but to make sure the transactions work
+        fragTransaction.commitAllowingStateLoss();
             }
+    public void showAboutDialog() {
+        // Create an instance of the dialog fragment and show it
+        AboutDialog dialog = new AboutDialog();
+        dialog.show(getFragmentManager(), "NoticeDialogFragment");
+
+    }
+
     public void showFragment(int fragmentIndex) {
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(getApplicationContext(), "DCMM", duration);
@@ -113,6 +128,7 @@ public class MainActivity extends ActionBarActivity {
         transaction.hide(this.mSectionsPagerAdapter.getItem(0));
         transaction.hide(this.mSectionsPagerAdapter.getItem(1));
         transaction.hide(this.mSectionsPagerAdapter.getItem(2));
+        transaction.hide(this.mSectionsPagerAdapter.getItem(4));
         transaction.show(this.mSectionsPagerAdapter.getItem(fragmentIndex));
         transaction.addToBackStack(null);
         transaction.commit();
@@ -143,6 +159,8 @@ public class MainActivity extends ActionBarActivity {
                    return new ViewApp();
                case 2:
                    return new SettingsFragment();
+               case 3:
+                   return new AboutFragment();
            }
             return new HomeFragment();
             //return PlaceholderFragment.newInstance(position + 1);
@@ -150,8 +168,8 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 4 total pages.
+            return 4;
         }
 
         @Override
@@ -159,8 +177,10 @@ public class MainActivity extends ActionBarActivity {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    //return getString(R.string.title_section1).toUpperCase(l);
+
+                    //This part is to draw the icon in the tab
                     myDrawable = getResources().getDrawable(R.drawable.home);;
+
                     sb = new SpannableStringBuilder("   HOME"); // space added before text for convenience
 
                     myDrawable.setBounds(0, 0, myDrawable.getIntrinsicWidth(), myDrawable.getIntrinsicHeight());
@@ -168,7 +188,7 @@ public class MainActivity extends ActionBarActivity {
                     sb.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     return sb;
                 case 1:
-                    //return getString(R.string.title_section1).toUpperCase(l);
+
                     myDrawable = getResources().getDrawable(R.drawable.view);;
                     sb = new SpannableStringBuilder("   VIEW"); // space added before text for convenience
 
@@ -176,7 +196,7 @@ public class MainActivity extends ActionBarActivity {
                     span = new ImageSpan(myDrawable, ImageSpan.ALIGN_BASELINE);
                     sb.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     return sb;
-                   // return getString(R.string.title_section2).toUpperCase(l);
+
                 case 2:
                     myDrawable = getResources().getDrawable(R.drawable.settings);;
                     sb = new SpannableStringBuilder("   SETTINGS"); // space added before text for convenience
@@ -185,6 +205,8 @@ public class MainActivity extends ActionBarActivity {
                     span = new ImageSpan(myDrawable, ImageSpan.ALIGN_BASELINE);
                     sb.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     return sb;
+                case 3:
+                    return "ABOUT";
             }
             return null;
         }

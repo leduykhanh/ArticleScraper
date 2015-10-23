@@ -13,9 +13,7 @@ import yang.acticlescraper.MainActivity;
 import yang.acticlescraper.flipview.ViewApp;
 import yang.acticlescraper.scrape.Utils;
 
-/**
- * Created by le on 22/7/2015.
- */
+
 public class Preload extends AsyncTask<String,Void,String> {
     Context context;
     MainActivity aa;

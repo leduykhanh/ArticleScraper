@@ -14,16 +14,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-/**
- * Created by le on 15/7/2015.
- */
+
 public class Utils {
     private static int count = 0;
-    private static int MAX_ARTICLE = 5;
+    private static int MAX_ARTICLE = 5;//not to scrape too long
     public static String getContent(String SURL) {
-        //if(ViewApp.adapter!=null)
-           // ViewApp.adapter.clearData();
+
         count = 0;
+        //Scrape the whole document
         URL url;
         try {
             url = new URL(SURL);
@@ -47,10 +45,10 @@ public class Utils {
             } catch (IOException logOrIgnore) {
             }
         }
-        //System.out.println(builder.toString());
+
         Document doc = Jsoup.parse(builder.toString());
 
-        // then use something like this to get your element:
+        //Scrape each articles
         Elements tds = doc.getElementsByTag("a");
         for (Element td : tds) {
             String linkHref = td.attr("href");
@@ -64,16 +62,6 @@ public class Utils {
             }
         }
 
-        /*String title_start = "<h1 class=\"story-body__h1\">";
-        String title_end = "</h1>";
-        String title_part = builder.substring(builder.indexOf(title_start) + title_start.length());
-        String title = title_part.substring(0, title_part.indexOf(title_end));
-
-        String content_start = "<p class=\"story-body__introduction\">";
-        String content_end = "</p>";
-        String content_part = builder.substring(builder.indexOf(content_start) + content_start.length());
-        String content = content_part.substring(0, content_part.indexOf(content_end));
-        System.out.println(content);*/
         return ("title");
     }
     public static String getChildContent(String SURL) {
@@ -102,11 +90,10 @@ public class Utils {
             } catch (IOException logOrIgnore) {
             }
         }
-        // System.out.println(builder.toString());
+        //get the title
 
         Document doc = Jsoup.parse(builder.toString());
 
-        // then use something like this to get your element:
         Elements h1s = doc.getElementsByTag("h1");
         String title="";
         String content = "";
@@ -119,7 +106,8 @@ public class Utils {
             if(linkClass.equalsIgnoreCase("story-body__h1"))
                 title = new String(linkText);
         }
-        if(title.length() < 3) return (title);
+        if(title.length() < 3) return (title);//falase scraping
+        //scrape time
         Elements divs = doc.getElementsByTag("div");
         for (Element td : divs) {
             String linkHref = td.attr("href");
@@ -130,6 +118,7 @@ public class Utils {
             if(linkClass.equalsIgnoreCase("date date--v2"))
                 time = new String(linkText);
         }
+        //scrape image link
         Elements imgs = doc.getElementsByTag("img");
         for (Element td : imgs) {
             String linkSrc = td.attr("src");
@@ -138,7 +127,6 @@ public class Utils {
             if(linkClass.equalsIgnoreCase("js-image-replace"))
             {
                 imageLink = new String(linkSrc);
-                Log.e("aaa", linkSrc);
                 break;
             }
         }

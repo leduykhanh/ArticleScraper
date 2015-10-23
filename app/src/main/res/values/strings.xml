@@ -6,6 +6,19 @@
     <string name="title_section3">Settings</string>
     <string name="facebook_app_id">193411710833537</string>
     <string name="hello_world">Hello world!</string>
-
     <string name="action_settings">Settings</string>
+    <string name="about">About App</string>
+    <string name="cancel">Cancel</string>
+    <string name="error">Error</string>
+    <string name="watch_video">Watch video</string>
+    <string name="description">
+        This app is used to scrape articles\' contents from BBC.\n
+        Swipe up on the top half to scroll the content.\n
+        Flip the page by swiping on the bottom half.\n
+    </string>
+    <string name="user_info">
+    Student name: Neville Zou \n
+    ID: 212558113 \n
+    Assignment code: Assignment 2
+    </string>
 </resources>

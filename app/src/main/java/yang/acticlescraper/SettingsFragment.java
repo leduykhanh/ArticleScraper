@@ -31,9 +31,7 @@ import java.util.ArrayList;
 
 import yang.acticlescraper.sql.ArticleDBHelper;
 
-/**
- * Created by le on 15/7/2015.
- */
+
 public class SettingsFragment extends Fragment {
     Context ctx;
     private LoginButton loginButton;
@@ -64,15 +62,6 @@ public class SettingsFragment extends Fragment {
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         String[] projection = {"link","title","date"};
         String sortOrder ="date DESC";
-//        Cursor cursor = db.query(
-//                "Articles",  // The table to query
-//                projection,                               // The columns to return
-//                null,                                // The columns for the WHERE clause
-//                null,                            // The values for the WHERE clause
-//                null,                                     // don't group the rows
-//                null,                                     // don't filter by row groups
-//                sortOrder                                 // The sort order
-//        );
         Cursor cursor = db.rawQuery("SELECT link,title,date FROM Articles WHERE 1=1",null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -93,7 +82,7 @@ public class SettingsFragment extends Fragment {
                         Intent.ACTION_VIEW,
                         Uri.parse(item)
                 );
-//based on item add info to intent
+
                 startActivity(intent);
 
             }
@@ -108,6 +97,7 @@ public class SettingsFragment extends Fragment {
         loginButton = (LoginButton) view.findViewById(R.id.login_button);
         loginButton.setReadPermissions("public_profile");
         loginButton.setFragment(this);
+        //callback after login
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
